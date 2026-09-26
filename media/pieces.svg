@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The pieces, in board units, each centred on its origin: white, black, queen, striker, and the striker
+     with a red rim when it can't be shot. runtime/BoardView copies the definitions into the page's svg and
+     draws each piece as a <use> of one; the row below is only there to preview them. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 0.6" width="500" height="100">
+  <defs>
+    <g id="white">
+      <circle cx="0.018" cy="0.03" r="0.159" fill="rgba(40,20,5,0.28)"/>
+      <circle r="0.159" fill="#f1e6cf" stroke="rgba(90,60,30,0.35)" stroke-width="0.012"/>
+      <circle r="0.1081" fill="none" stroke="rgba(120,85,45,0.35)" stroke-width="0.014"/>
+      <circle r="0.0318" fill="none" stroke="rgba(120,85,45,0.35)" stroke-width="0.012"/>
+    </g>
+    <g id="black">
+      <circle cx="0.018" cy="0.03" r="0.159" fill="rgba(40,20,5,0.28)"/>
+      <circle r="0.159" fill="#2b2521" stroke="rgba(0,0,0,0.6)" stroke-width="0.012"/>
+      <circle r="0.1081" fill="none" stroke="rgba(255,240,220,0.18)" stroke-width="0.014"/>
+      <circle r="0.0318" fill="none" stroke="rgba(255,240,220,0.18)" stroke-width="0.012"/>
+    </g>
+    <g id="queen">
+      <circle cx="0.018" cy="0.03" r="0.159" fill="rgba(40,20,5,0.28)"/>
+      <circle r="0.159" fill="#c0182e" stroke="rgba(80,0,10,0.6)" stroke-width="0.012"/>
+      <circle r="0.1081" fill="none" stroke="rgba(255,210,210,0.35)" stroke-width="0.014"/>
+      <circle r="0.0318" fill="none" stroke="rgba(255,210,210,0.35)" stroke-width="0.012"/>
+    </g>
+    <g id="striker">
+      <circle cx="0.018" cy="0.03" r="0.206" fill="rgba(40,20,5,0.28)"/>
+      <circle r="0.206" fill="#f7f3ea" stroke="#2c6e73" stroke-width="0.022"/>
+      <circle r="0.1401" fill="none" stroke="#2c6e73" stroke-width="0.014"/>
+      <circle r="0.0577" fill="#2c6e73"/>
+    </g>
+    <g id="blocked">
+      <circle cx="0.018" cy="0.03" r="0.206" fill="rgba(40,20,5,0.28)"/>
+      <circle r="0.206" fill="#f7f3ea" stroke="#d7263d" stroke-width="0.022"/>
+      <circle r="0.1401" fill="none" stroke="#2c6e73" stroke-width="0.014"/>
+      <circle r="0.0577" fill="#2c6e73"/>
+    </g>
+  </defs>
+  <use href="#white" x="0.3" y="0.3"/>
+  <use href="#black" x="0.9" y="0.3"/>
+  <use href="#queen" x="1.5" y="0.3"/>
+  <use href="#striker" x="2.1" y="0.3"/>
+  <use href="#blocked" x="2.7" y="0.3"/>
+</svg>

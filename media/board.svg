@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The carrom board, drawn in board units (decimetres of a 74 cm board) around its centre, with room
+     around the wooden frame for its shadow. runtime/BoardView places it in the page's svg as is. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4.75 -4.75 9.5 9.5" width="950" height="950">
+  <defs>
+    <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5a2e1c"/>
+      <stop offset="0.5" stop-color="#3f1f14"/>
+      <stop offset="1" stop-color="#2a140c"/>
+    </linearGradient>
+    <radialGradient id="ply" cx="0.5" cy="0.5" r="0.75">
+      <stop offset="0" stop-color="#f1dcae"/>
+      <stop offset="1" stop-color="#dfc08a"/>
+    </radialGradient>
+    <radialGradient id="hole">
+      <stop offset="0.55" stop-color="#140c08"/>
+      <stop offset="1" stop-color="#2d1a10"/>
+    </radialGradient>
+    <filter id="shadow" x="-0.2" y="-0.2" width="1.4" height="1.4">
+      <feDropShadow dx="0" dy="0.12" stdDeviation="0.18" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <!-- the wooden frame, and the plywood inside it -->
+  <rect x="-4.35" y="-4.35" width="8.7" height="8.7" rx="0.3" fill="url(#wood)" filter="url(#shadow)"/>
+  <rect x="-3.73" y="-3.73" width="7.46" height="7.46" fill="#1e0f08"/>
+  <rect x="-3.7" y="-3.7" width="7.4" height="7.4" fill="url(#ply)"/>
+  <!-- faint grain -->
+  <g opacity="0.18" stroke="#b88b52" stroke-width="0.008" fill="none">
+    <path d="M -3.7 -3.5577 C -1.85 -3.5577 1.85 -3.6377 3.7 -3.5577"/>
+    <path d="M -3.7 -3.2235 C -1.85 -3.1562 1.85 -3.2667 3.7 -3.2235"/>
+    <path d="M -3.7 -3.0012 C -1.85 -2.9285 1.85 -2.9679 3.7 -3.0012"/>
+    <path d="M -3.7 -2.7501 C -1.85 -2.7388 1.85 -2.6709 3.7 -2.7501"/>
+    <path d="M -3.7 -2.3945 C -1.85 -2.4551 1.85 -2.3422 3.7 -2.3945"/>
+    <path d="M -3.7 -2.0947 C -1.85 -2.1714 1.85 -2.1174 3.7 -2.0947"/>
+    <path d="M -3.7 -1.885 C -1.85 -1.9073 1.85 -1.9618 3.7 -1.885"/>
+    <path d="M -3.7 -1.5963 C -1.85 -1.5437 1.85 -1.6566 3.7 -1.5963"/>
+    <path d="M -3.7 -1.2378 C -1.85 -1.1587 1.85 -1.2262 3.7 -1.2378"/>
+    <path d="M -3.7 -0.9763 C -1.85 -0.9433 1.85 -0.9034 3.7 -0.9763"/>
+    <path d="M -3.7 -0.7596 C -1.85 -0.8031 1.85 -0.6925 3.7 -0.7596"/>
+    <path d="M -3.7 -0.4344 C -1.85 -0.5144 1.85 -0.4347 3.7 -0.4344"/>
+    <path d="M -3.7 -0.0923 C -1.85 -0.1352 1.85 -0.1598 3.7 -0.0923"/>
+    <path d="M -3.7 0.1369 C -1.85 0.1705 1.85 0.0643 3.7 0.1369"/>
+    <path d="M -3.7 0.3783 C -1.85 0.4576 1.85 0.3674 3.7 0.3783"/>
+    <path d="M -3.7 0.7295 C -1.85 0.7815 1.85 0.7903 3.7 0.7295"/>
+    <path d="M -3.7 1.0401 C -1.85 1.0171 1.85 1.1167 3.7 1.0401"/>
+    <path d="M -3.7 1.2515 C -1.85 1.1746 1.85 1.2735 3.7 1.2515"/>
+    <path d="M -3.7 1.529 C -1.85 1.4689 1.85 1.4761 3.7 1.529"/>
+    <path d="M -3.7 1.8887 C -1.85 1.9007 1.85 1.8096 3.7 1.8887"/>
+    <path d="M -3.7 2.1611 C -1.85 2.2341 1.85 2.1284 3.7 2.1611"/>
+    <path d="M -3.7 2.3737 C -1.85 2.4407 1.85 2.4176 3.7 2.3737"/>
+    <path d="M -3.7 2.6891 C -1.85 2.6884 1.85 2.7691 3.7 2.6891"/>
+    <path d="M -3.7 3.0377 C -1.85 2.97 1.85 3.0804 3.7 3.0377"/>
+    <path d="M -3.7 3.2751 C -1.85 3.2027 1.85 3.2412 3.7 3.2751"/>
+    <path d="M -3.7 3.5079 C -1.85 3.4973 1.85 3.4286 3.7 3.5079"/>
+  </g>
+  <!-- the four striker lines, the corner arrows, and the centre circles -->
+  <g stroke="#221a14" stroke-width="0.02" fill="none">
+    <g transform="rotate(0)">
+      <line x1="-2.35" y1="2.685" x2="2.35" y2="2.685"/>
+      <line x1="-2.35" y1="2.367" x2="2.35" y2="2.367"/>
+      <circle cx="-2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="-2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+      <circle cx="2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+    </g>
+    <g transform="rotate(90)">
+      <line x1="-2.35" y1="2.685" x2="2.35" y2="2.685"/>
+      <line x1="-2.35" y1="2.367" x2="2.35" y2="2.367"/>
+      <circle cx="-2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="-2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+      <circle cx="2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+    </g>
+    <g transform="rotate(180)">
+      <line x1="-2.35" y1="2.685" x2="2.35" y2="2.685"/>
+      <line x1="-2.35" y1="2.367" x2="2.35" y2="2.367"/>
+      <circle cx="-2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="-2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+      <circle cx="2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+    </g>
+    <g transform="rotate(270)">
+      <line x1="-2.35" y1="2.685" x2="2.35" y2="2.685"/>
+      <line x1="-2.35" y1="2.367" x2="2.35" y2="2.367"/>
+      <circle cx="-2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="-2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+      <circle cx="2.35" cy="2.526" r="0.159" fill="#9e1f1a"/>
+      <circle cx="2.35" cy="2.526" r="0.0875" fill="none" stroke="#f1dcae" stroke-width="0.012"/>
+    </g>
+    <g transform="rotate(0)">
+      <line x1="2.95" y1="2.95" x2="1.1" y2="1.1"/>
+      <path d="M 2.93 2.75 L 2.99 2.99 L 2.75 2.93"/>
+      <path d="M 0.8402 1.25 A 0.3 0.3 0 0 1 1.25 0.8402"/>
+    </g>
+    <g transform="rotate(90)">
+      <line x1="2.95" y1="2.95" x2="1.1" y2="1.1"/>
+      <path d="M 2.93 2.75 L 2.99 2.99 L 2.75 2.93"/>
+      <path d="M 0.8402 1.25 A 0.3 0.3 0 0 1 1.25 0.8402"/>
+    </g>
+    <g transform="rotate(180)">
+      <line x1="2.95" y1="2.95" x2="1.1" y2="1.1"/>
+      <path d="M 2.93 2.75 L 2.99 2.99 L 2.75 2.93"/>
+      <path d="M 0.8402 1.25 A 0.3 0.3 0 0 1 1.25 0.8402"/>
+    </g>
+    <g transform="rotate(270)">
+      <line x1="2.95" y1="2.95" x2="1.1" y2="1.1"/>
+      <path d="M 2.93 2.75 L 2.99 2.99 L 2.75 2.93"/>
+      <path d="M 0.8402 1.25 A 0.3 0.3 0 0 1 1.25 0.8402"/>
+    </g>
+    <circle r="0.85"/>
+    <circle r="0.78" stroke-width="0.01"/>
+  </g>
+  <g fill="#9e1f1a">
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(0)" opacity="0.9"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(45)" opacity="0.55"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(90)" opacity="0.9"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(135)" opacity="0.55"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(180)" opacity="0.9"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(225)" opacity="0.55"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(270)" opacity="0.9"/>
+    <path d="M 0 -0.7 L 0.06 -0.2 L -0.06 -0.2 Z" transform="rotate(315)" opacity="0.55"/>
+  </g>
+  <circle r="0.2" fill="#9e1f1a" stroke="#221a14" stroke-width="0.02"/>
+  <!-- pockets -->
+  <circle cx="-3.4775" cy="-3.4775" r="0.2425" fill="#1e0f08"/>
+  <circle cx="-3.4775" cy="-3.4775" r="0.2225" fill="url(#hole)"/>
+  <circle cx="3.4775" cy="-3.4775" r="0.2425" fill="#1e0f08"/>
+  <circle cx="3.4775" cy="-3.4775" r="0.2225" fill="url(#hole)"/>
+  <circle cx="3.4775" cy="3.4775" r="0.2425" fill="#1e0f08"/>
+  <circle cx="3.4775" cy="3.4775" r="0.2225" fill="url(#hole)"/>
+  <circle cx="-3.4775" cy="3.4775" r="0.2425" fill="#1e0f08"/>
+  <circle cx="-3.4775" cy="3.4775" r="0.2225" fill="url(#hole)"/>
+</svg>

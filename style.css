@@ -1,0 +1,79 @@
+/* Hind by the Indian Type Foundry, and Yatra One by the Yatra Project Authors,
+   SIL Open Font License 1.1 (see fonts/) */
+@font-face {
+  font-family: "Hind";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/Hind-Regular-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Hind";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fonts/Hind-Medium-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Hind";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/Hind-SemiBold-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Yatra One";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/YatraOne-Regular-latin.woff2") format("woff2");
+}
+
+:root {
+  --carrom-font: "Hind", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --carrom-display: "Yatra One", Georgia, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: var(--carrom-font);
+  background: radial-gradient(120% 90% at 50% 45%, #1f6f78 0%, #17565d 60%, #0f4046 100%);
+  background-color: #17565d;
+}
+
+#board {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* the preact hud, over the board: transparent to pointers except where a
+   control opts back in */
+#ui-root {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.terminal {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}

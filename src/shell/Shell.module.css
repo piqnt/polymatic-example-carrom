@@ -1,0 +1,327 @@
+/* The board is drawn by runtime/BoardView in an 8.7 x 12.7 unit box: the 8.7
+   unit board, a 1.6 unit band above it and a 2.4 unit band below it (VIEWBOX in
+   model/Config), scaled to fit the window and centred. The hud has to sit on
+   that same box, so the frame below reproduces it and `--u` is one board unit.
+   Every offset here is from the box's top left corner: the board runs from 1.6u
+   to 10.3u down. */
+
+.frame {
+  --u: min(100vw / 8.7, 100vh / 12.7);
+  /* the wall behind the board, and the brass and paper of the pieces */
+  --ink: #f6f0e3;
+  --ink-soft: rgba(246, 240, 227, 0.72);
+  --line: rgba(246, 240, 227, 0.22);
+  --marigold: #f2b134;
+  --wood: #3f1f14;
+  --paper: #f1dcae;
+  --white-coin: #f1e6cf;
+  --black-coin: #2b2521;
+  --queen: #c0182e;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--u) * 8.7);
+  height: calc(var(--u) * 12.7);
+  pointer-events: none;
+  font-family: var(--carrom-font);
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+button:focus-visible {
+  outline: calc(var(--u) * 0.05) solid var(--marigold);
+  outline-offset: calc(var(--u) * 0.05);
+}
+
+/* --- the plaques: black's above the board, white's below, by their lines --- */
+
+.plaque {
+  position: absolute;
+  left: 0;
+  width: calc(var(--u) * 5);
+  height: calc(var(--u) * 1.2);
+  padding: calc(var(--u) * 0.14) calc(var(--u) * 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--u) * 0.12);
+  border: calc(var(--u) * 0.025) solid var(--line);
+  border-radius: calc(var(--u) * 0.25);
+  background: rgba(0, 0, 0, 0.12);
+  transition:
+    border-color 160ms,
+    background-color 160ms;
+}
+
+.top {
+  top: calc(var(--u) * 0.2);
+}
+
+.bottom {
+  top: calc(var(--u) * 10.5);
+}
+
+.active {
+  border-color: var(--marigold);
+  background: rgba(242, 177, 52, 0.14);
+}
+
+.plaqueRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: calc(var(--u) * 0.15);
+  white-space: nowrap;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.14);
+  font-size: calc(var(--u) * 0.36);
+  font-weight: 600;
+}
+
+.who {
+  color: var(--ink-soft);
+  font-weight: 400;
+  font-size: calc(var(--u) * 0.28);
+}
+
+.points {
+  color: var(--ink-soft);
+  font-size: calc(var(--u) * 0.28);
+  font-variant-numeric: tabular-nums;
+}
+
+.chip {
+  width: calc(var(--u) * 0.3);
+  height: calc(var(--u) * 0.3);
+  border-radius: 50%;
+  flex: none;
+}
+
+.tray {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.08);
+}
+
+.slot {
+  width: calc(var(--u) * 0.24);
+  height: calc(var(--u) * 0.24);
+  border-radius: 50%;
+  border: calc(var(--u) * 0.025) dashed var(--line);
+}
+
+.chip.white,
+.slot.white {
+  border: none;
+  background: var(--white-coin);
+  box-shadow: inset 0 0 0 calc(var(--u) * 0.035) rgba(0, 0, 0, 0.12);
+}
+
+.chip.black,
+.slot.black {
+  border: none;
+  background: var(--black-coin);
+  box-shadow: inset 0 0 0 calc(var(--u) * 0.03) rgba(255, 255, 255, 0.18);
+}
+
+.slot.queen {
+  border: none;
+  background: var(--queen);
+  margin-left: calc(var(--u) * 0.1);
+}
+
+/* sunk, but not covered yet */
+.slot.pending {
+  opacity: 0.5;
+}
+
+/* --- the controls: opposite black's plaque, and the help opposite white's --- */
+
+.controls {
+  position: absolute;
+  right: 0;
+  top: calc(var(--u) * 0.2);
+  height: calc(var(--u) * 1.2);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.15);
+}
+
+.seg {
+  display: flex;
+  padding: calc(var(--u) * 0.05);
+  border: calc(var(--u) * 0.025) solid var(--line);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.16);
+  pointer-events: auto;
+}
+
+.seg button,
+.round {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--u) * 0.8);
+  height: calc(var(--u) * 0.8);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  font-size: calc(var(--u) * 0.44);
+}
+
+.seg button[aria-pressed="true"] {
+  background: var(--ink);
+  color: #17565d;
+}
+
+.round {
+  border: calc(var(--u) * 0.025) solid var(--line);
+  background: rgba(0, 0, 0, 0.16);
+}
+
+.round:hover,
+.seg button[aria-pressed="false"]:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.helpButton {
+  position: absolute;
+  right: 0;
+  top: calc(var(--u) * 10.7);
+}
+
+/* two lines of what happened, under white's plaque */
+.status {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--u) * 11.85);
+  margin: 0;
+  font-size: calc(var(--u) * 0.3);
+  line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* --- cards over the board --- */
+
+/* The frame this sits in is only the board's box, and its transform makes it
+   the containing block even for fixed positioning, so the backdrop reaches out
+   past it on every side instead; the page clips it to the window. */
+.backdrop {
+  position: absolute;
+  inset: -100vmax;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(10, 30, 32, 0.35), rgba(5, 18, 20, 0.75));
+}
+
+/* a card of board ply in a walnut frame, like the board itself */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--u) * 0.2);
+  max-width: calc(var(--u) * 7.4);
+  padding: calc(var(--u) * 0.5) calc(var(--u) * 0.7) calc(var(--u) * 0.55);
+  border: calc(var(--u) * 0.16) solid var(--wood);
+  border-radius: calc(var(--u) * 0.25);
+  background: radial-gradient(ellipse at 50% 40%, #f5e4bd, #dfc08a);
+  color: #2a1a10;
+  box-shadow: 0 calc(var(--u) * 0.2) calc(var(--u) * 0.6) rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.cardTitle {
+  font-family: var(--carrom-display);
+  font-size: calc(var(--u) * 0.55);
+  line-height: 1.1;
+  color: #7c1a14;
+}
+
+.cardPoints {
+  font-size: calc(var(--u) * 0.9);
+  font-weight: 600;
+  line-height: 1;
+}
+
+.cardScore {
+  font-size: calc(var(--u) * 0.3);
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+
+.cardButton {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 0.15);
+  margin-top: calc(var(--u) * 0.2);
+  padding: calc(var(--u) * 0.2) calc(var(--u) * 0.5);
+  border: none;
+  border-radius: 999px;
+  background: var(--marigold);
+  color: #3b2016;
+  font-weight: 600;
+  font-size: calc(var(--u) * 0.34);
+  box-shadow: 0 calc(var(--u) * 0.05) calc(var(--u) * 0.12) rgba(0, 0, 0, 0.3);
+}
+
+.cardButton:hover {
+  filter: brightness(1.06);
+}
+
+.help {
+  align-items: stretch;
+  text-align: left;
+  font-size: calc(var(--u) * 0.28);
+  line-height: 1.45;
+}
+
+.help .cardTitle {
+  text-align: center;
+}
+
+.help p {
+  margin: 0;
+}
+
+.help kbd {
+  font-family: inherit;
+  font-size: 0.9em;
+  border: 1px solid rgba(42, 26, 16, 0.35);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 0.3em;
+}
+
+.close {
+  position: absolute;
+  top: calc(var(--u) * 0.15);
+  right: calc(var(--u) * 0.15);
+  display: flex;
+  padding: calc(var(--u) * 0.08);
+  border: none;
+  border-radius: 50%;
+  background: none;
+  font-size: calc(var(--u) * 0.4);
+}
+
+.close:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
