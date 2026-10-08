@@ -7,7 +7,7 @@
 
 import { Middleware } from "polymatic";
 
-import { type MainContext, G, clamp, isCpuTurn, strikerValid } from "../model";
+import { type MainContext, G, clamp, isMyTurn, strikerValid } from "../model";
 import { Shoot } from "./events";
 
 type Point = { x: number; y: number };
@@ -61,7 +61,7 @@ export class Input extends Middleware<MainContext> {
 
   canAct() {
     const ctx = this.context;
-    return ctx && ctx.phase === "place" && !isCpuTurn(ctx) && !ctx.helpOpen.value;
+    return ctx && ctx.phase === "place" && isMyTurn(ctx) && !ctx.hud.helpOpen.value;
   }
 
   /** aim away from where the pointer is pulled back to, harder the further */

@@ -26,9 +26,11 @@ export class HudManager extends Middleware<MainContext> {
   handleFrameRender = () => {
     const ctx = this.context;
     const hud = ctx.hud;
+    const waiting = ctx.mode === "online" && !ctx.started;
     hud.mode.value = ctx.mode;
-    hud.turn.value = ctx.phase === "over" ? -1 : ctx.turn;
-    hud.message.value = ctx.message;
+    hud.seat.value = ctx.mode === "online" ? ctx.seat : -1;
+    hud.turn.value = ctx.phase === "over" || waiting ? -1 : ctx.turn;
+    hud.message.value = waiting ? "Waiting for an opponent. Share the room id with them." : ctx.message;
     hud.result.value = ctx.result;
     hud.players.forEach((player, t) => {
       player.points.value = ctx.players[t].points;

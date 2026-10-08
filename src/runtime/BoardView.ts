@@ -117,7 +117,7 @@ export class BoardView extends Middleware<MainContext> {
     this.binder.setData([...ctx.pieces, ctx.striker].filter((piece) => piece.onBoard));
     this.drawAim(ctx);
     this.turnMark.setAttribute("transform", `translate(0 ${baseY(ctx.turn)})`);
-    this.turnMark.setAttribute("opacity", ctx.phase === "over" ? "0" : "1");
+    this.turnMark.setAttribute("opacity", ctx.phase === "over" || !ctx.started ? "0" : "1");
   };
 
   pieceDriver = Driver.create<Piece, SVGElement>({

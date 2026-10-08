@@ -5,14 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { type Signal, signal } from "@preact/signals";
-
 import { G } from "./Config";
 import { HudData } from "./Hud";
 import { Piece } from "./Piece";
 
-/** against the computer, which plays black, or two players on one screen */
-export type PlayMode = "cpu" | "pvp";
+/** against the computer, which plays black, two players on one screen, or a room on the game server */
+export type PlayMode = "cpu" | "pvp" | "online";
 
 /** placing the striker and aiming, pieces moving, the rules applying a shot, or the board won */
 export type Phase = "place" | "moving" | "resolving" | "over";
@@ -38,13 +36,26 @@ export class Player {
   wins = 0;
 }
 
+/** A login for a room: the id is shown to the other players, the secret is not */
+export interface Auth {
+  id: string;
+  secret: string;
+}
+
+/** Someone in a room: the first two to join play a side each, anyone after them watches */
+export interface User {
+  id: string;
+  seat?: number;
+}
+
 /**
- * Global context, shared between the runtime and the shell.
+ * A game's context. The offline game runs the rules on it; online the room
+ * server does, and runtime/RoomClient copies what it sends onto the context of
+ * each browser in the room.
  *
- * The plain fields belong to the runtime and are written many times a frame.
- * The signals are the bridge: what the hud shows is mirrored onto `hud` once a
- * frame (runtime/HudManager), and `ready` and `helpOpen` are set by one side
- * and read by the other.
+ * The plain fields are written many times a frame. The shell sees none of
+ * them: what the hud shows is mirrored onto `hud` once a frame
+ * (runtime/HudManager).
  */
 export class MainContext {
   mode: PlayMode = "cpu";
@@ -68,18 +79,22 @@ export class MainContext {
   message = "";
   result: BoardResult | null = null;
 
-  // --- shell facing state ---
+  // --- online ---
 
-  /** the first board is set up; the shell draws nothing before this */
-  ready: Signal<boolean>;
+  /** both players are in the room; offline, always */
+  started = true;
+  /** the side this screen plays, 0 white or 1 black; -1 for a spectator, and offline where it plays both */
+  seat = -1;
+  /** the room, and the login this screen uses there, see lobby-client/RoomStore */
+  room: string | null = null;
+  auth: Auth | null = null;
+  /** called by the room client when the server has no such room */
+  onRoomNotFound?: () => void;
 
-  helpOpen: Signal<boolean>;
-
+  /** the bridge to the shell, made by the lobby and shared by every game it starts */
   hud: HudData;
 
-  constructor() {
-    this.ready = signal(false);
-    this.helpOpen = signal(false);
-    this.hud = new HudData();
+  constructor(hud = new HudData()) {
+    this.hud = hud;
   }
 }

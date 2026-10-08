@@ -11,17 +11,16 @@ import { Hud } from "./Hud";
 import styles from "./Shell.module.css";
 
 /**
- * The shell. It mounts before the runtime exists (see index.tsx), so every read
- * below is guarded: `runtime` fills in once the game has been activated, and
- * `ready` once the first board is racked.
+ * The shell. It mounts before the lobby exists (see index.tsx), so the read
+ * below is guarded: `runtime` fills in once the lobby has been activated. The
+ * hud waits for the first board itself, see Hud.
  */
 export function App() {
-  const context = runtime.value?.context;
-  const ready = context?.ready.value;
+  const lobby = runtime.value;
 
   return (
-    <GameContext.Provider value={runtime.value ?? null}>
-      <div class={styles.frame}>{runtime.value && ready && <Hud />}</div>
+    <GameContext.Provider value={lobby}>
+      <div class={styles.frame}>{lobby && <Hud />}</div>
     </GameContext.Provider>
   );
 }

@@ -8,15 +8,16 @@
 import { Runtime } from "polymatic";
 import "polymatic/devtools-install";
 
-import { MainContext } from "./model";
-import { Main } from "./runtime/Main";
+import { HudData } from "./model";
+import { LobbyClient } from "./lobby-client/LobbyClient";
 import { runtime } from "./async-signals";
 
-const main = new Main();
-const context = new MainContext();
-Runtime.activate(main, context);
+const lobby = new LobbyClient();
+// one hud for the whole session: the lobby hands it to every game it starts
+const hud = new HudData();
+Runtime.activate(lobby, { hud });
 
-runtime.value = { context, emit: main.emit.bind(main) };
+runtime.value = { hud, emit: lobby.emit.bind(lobby) };
 
 // for debugging
 if (typeof window !== "undefined") {
@@ -26,7 +27,7 @@ if (typeof window !== "undefined") {
 // deactivate runtime on hot module reloading
 if (import.meta.hot) {
   import.meta.hot.dispose(() => {
-    Runtime.deactivate(main);
+    Runtime.deactivate(lobby);
     runtime.value = null;
   });
 }

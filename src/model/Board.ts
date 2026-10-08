@@ -26,6 +26,10 @@ export const remaining = (ctx: MainContext, kind: CoinColor) =>
 
 export const isCpuTurn = (ctx: MainContext) => ctx.mode === "cpu" && ctx.turn === 1;
 
+/** the player at this screen may place the striker and shoot: offline, unless it is the computer's turn; online, on their own */
+export const isMyTurn = (ctx: MainContext) =>
+  ctx.mode === "online" ? ctx.started && ctx.turn === ctx.seat : !isCpuTurn(ctx);
+
 export function overlaps(ctx: MainContext, x: number, y: number, r: number, ignore?: Piece) {
   for (const p of ctx.pieces) {
     if (!p.onBoard || p === ignore) continue;

@@ -1,7 +1,8 @@
 import preact from "@preact/preset-vite";
 
 export default {
-  base: "/polymatic-example-carrom/",
+  // relative, so the same build works on github pages and from the game server
+  base: "./",
   plugins: [preact()],
   build: {},
 };

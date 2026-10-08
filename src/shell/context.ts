@@ -8,15 +8,15 @@
 import { createContext } from "preact";
 import { useContext } from "preact/hooks";
 
-import { type MainContext } from "../model";
+import { type HudData } from "../model";
 
 /**
- * What a component is handed: the shared context to read signals off, and the
- * runtime's own emit to send events back into it. Nothing else of the runtime
- * is exposed - the shell never holds a middleware.
+ * What a component is handed: the hud signals to read, and the lobby's own
+ * emit to send events back into it. Nothing else of the game is exposed - the
+ * shell never holds a middleware.
  */
 export interface GameRuntime {
-  context: MainContext;
+  hud: HudData;
   emit: (type: string, ev?: any) => void;
 }
 

@@ -5,11 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { TbHelp, TbRefresh, TbRobot, TbUsers, TbX } from "react-icons/tb";
+import { TbHelp, TbRefresh, TbRobot, TbUsers, TbWorld, TbX } from "react-icons/tb";
 
 import { COLORS, type PlayMode } from "../model";
 import { useRuntime } from "./context";
-import { closeHelp, newBoard, openHelp, setMode } from "./actions";
+import { closeHelp, newBoard, openHelp, openOnline, setMode } from "./actions";
+import { NoticeCard, OnlineCard, RejoinCard } from "./RoomCards";
 import styles from "./Shell.module.css";
 
 const NAMES = ["White", "Black"];
@@ -17,30 +18,40 @@ const NAMES = ["White", "Black"];
 /**
  * Black's plaque and the controls above the board, white's plaque and the
  * status line below it: each plaque on its player's side. Over the board, the
- * card when a board is won, and the help.
+ * card when a board is won, the help, and the lobby's cards.
+ *
+ * The plaques and the board's card wait for the first board, the rest is
+ * there from the start: a room that can not be reached never has a board.
  */
 export function Hud() {
+  const { hud } = useRuntime();
+  const ready = hud.ready.value;
   return (
     <>
-      <Plaque turn={1} />
+      {ready && <Plaque turn={1} />}
       <Controls />
-      <Plaque turn={0} />
+      {ready && <Plaque turn={0} />}
+      <RoomBadge />
       <HelpButton />
       <Status />
-      <BoardWon />
+      {ready && <BoardWon />}
       <Help />
+      {hud.onlineOpen.value && <OnlineCard />}
+      {hud.rejoinRoom.value && <RejoinCard />}
+      {hud.notice.value && !hud.rejoinRoom.value && <NoticeCard />}
     </>
   );
 }
 
-function who(mode: PlayMode, turn: number) {
+function who(mode: PlayMode, seat: number, turn: number) {
   if (mode === "cpu") return turn === 0 ? "you" : "computer";
+  if (mode === "online") return seat < 0 ? "" : turn === seat ? "you" : "opponent";
   return turn === 0 ? "bottom" : "top";
 }
 
 /** A player's name, points and the tray of the coins they have sunk, lit on their turn */
 function Plaque({ turn }: { turn: number }) {
-  const { hud } = useRuntime().context;
+  const { hud } = useRuntime();
   const player = hud.players[turn];
   const color = COLORS[turn];
   const sunk = player.sunk.value;
@@ -61,7 +72,7 @@ function Plaque({ turn }: { turn: number }) {
         <span class={styles.name}>
           <span class={`${styles.chip} ${styles[color]}`} />
           {NAMES[turn]}
-          <span class={styles.who}>{who(hud.mode.value, turn)}</span>
+          <span class={styles.who}>{who(hud.mode.value, hud.seat.value, turn)}</span>
         </span>
         <span class={styles.points}>
           {points} {points === 1 ? "pt" : "pts"}
@@ -84,7 +95,7 @@ function Plaque({ turn }: { turn: number }) {
 /** Who you play, and a new board */
 function Controls() {
   const runtime = useRuntime();
-  const mode = runtime.context.hud.mode.value;
+  const mode = runtime.hud.mode.value;
   return (
     <div class={styles.controls}>
       <div class={styles.seg} role="group" aria-label="Opponent">
@@ -106,17 +117,40 @@ function Controls() {
         >
           <TbUsers aria-hidden />
         </button>
+        <button
+          type="button"
+          aria-pressed={mode === "online"}
+          aria-label="Play online"
+          title="Play online"
+          onClick={() => openOnline(runtime)}
+        >
+          <TbWorld aria-hidden />
+        </button>
       </div>
-      <button
-        type="button"
-        class={styles.round}
-        aria-label="New board"
-        title="New board"
-        onClick={() => newBoard(runtime)}
-      >
-        <TbRefresh aria-hidden />
-      </button>
+      {/* online, a board is played out: the next one comes from the card when it is won */}
+      {mode !== "online" && (
+        <button
+          type="button"
+          class={styles.round}
+          aria-label="New board"
+          title="New board"
+          onClick={() => newBoard(runtime)}
+        >
+          <TbRefresh aria-hidden />
+        </button>
+      )}
     </div>
+  );
+}
+
+/** The room being played in, to read out to the other player */
+function RoomBadge() {
+  const room = useRuntime().hud.room.value;
+  if (!room) return null;
+  return (
+    <span class={styles.roomBadge} aria-label="Room id" title="Room id, for the other player to join with">
+      {room}
+    </span>
   );
 }
 
@@ -135,12 +169,13 @@ function HelpButton() {
   );
 }
 
-/** What just happened, and whose turn it is */
+/** What just happened and whose turn it is, or trouble reaching the room */
 function Status() {
-  const { hud } = useRuntime().context;
+  const { hud } = useRuntime();
+  const error = hud.roomError.value;
   return (
-    <p class={styles.status} aria-live="polite">
-      {hud.message.value}
+    <p class={`${styles.status} ${error ? styles.error : ""}`} aria-live="polite">
+      {error ?? hud.message.value}
     </p>
   );
 }
@@ -148,17 +183,24 @@ function Status() {
 /** The card when a side has sunk all their coins, and the way on to the next board */
 function BoardWon() {
   const runtime = useRuntime();
-  const { hud } = runtime.context;
+  const { hud } = runtime;
   const result = hud.result.value;
   if (!result) return null;
 
   const mode = hud.mode.value;
+  const seat = hud.seat.value;
+  // online, someone watching can't start the next board
+  const watching = mode === "online" && seat < 0;
   const title =
     mode === "cpu"
       ? result.winner === 0
         ? "You win the board"
         : "The computer wins the board"
-      : `${NAMES[result.winner]} wins the board`;
+      : mode === "online" && !watching
+        ? result.winner === seat
+          ? "You win the board"
+          : "Your opponent wins the board"
+        : `${NAMES[result.winner]} wins the board`;
   const [white, black] = hud.players.map((p) => p.points.value);
 
   return (
@@ -171,10 +213,12 @@ function BoardWon() {
         <span class={styles.cardScore}>
           White {white} · Black {black}
         </span>
-        <button type="button" class={styles.cardButton} onClick={() => newBoard(runtime)} autoFocus>
-          <TbRefresh aria-hidden />
-          Next board
-        </button>
+        {!watching && (
+          <button type="button" class={styles.cardButton} onClick={() => newBoard(runtime)} autoFocus>
+            <TbRefresh aria-hidden />
+            Next board
+          </button>
+        )}
       </div>
     </div>
   );
@@ -182,7 +226,7 @@ function BoardWon() {
 
 function Help() {
   const runtime = useRuntime();
-  if (!runtime.context.helpOpen.value) return null;
+  if (!runtime.hud.helpOpen.value) return null;
 
   return (
     <div class={styles.backdrop} onClick={() => closeHelp(runtime)}>
@@ -212,6 +256,14 @@ function Help() {
           <kbd>→</kbd> place, <kbd>↑</kbd>
           <kbd>↓</kbd> aim, <kbd>+</kbd>
           <kbd>−</kbd> power, <kbd>Space</kbd> shoot. Hold <kbd>Shift</kbd> for bigger steps.
+        </p>
+        <p>
+          To play a friend online, choose the globe{" "}
+          <span class={styles.inlineIcon}>
+            <TbWorld aria-hidden />
+          </span>{" "}
+          and create a room, then give them its id to join with. You each get a side at random; anyone who joins after
+          you two watches.
         </p>
       </div>
     </div>

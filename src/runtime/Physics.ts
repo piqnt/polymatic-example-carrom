@@ -72,6 +72,9 @@ export class Physics extends Middleware<MainContext> {
   handleShoot = ({ angle, power }: { angle: number; power: number }) => {
     const body = this.bodies.get("striker");
     if (!body) return;
+    // from where it is now, which may have been set since the last frame
+    const s = this.context.striker;
+    body.setPosition({ x: s.x, y: s.y });
     const speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * power;
     body.setLinearVelocity({ x: Math.cos(angle) * speed, y: Math.sin(angle) * speed });
     this.acc = 0;

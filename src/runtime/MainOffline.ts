@@ -17,13 +17,14 @@ import { BoardView } from "./BoardView";
 import { HudManager } from "./HudManager";
 
 /**
- * The runtime. It owns the board, the pieces, the physics and the computer
- * player; the plaques, the status line and the controls are the shell's (see
- * shell/App), and the two meet at the signals on MainContext.
+ * The offline game, against the computer or two players on one screen. It owns
+ * the board, the pieces, the physics and the computer player; the plaques, the
+ * status line and the controls are the shell's (see shell/App), and the two
+ * meet at the signals on the context's hud.
  *
  * Physics runs before the rules on each frame, so the rules read a finished step.
  */
-export class Main extends Middleware<MainContext> {
+export class MainOffline extends Middleware<MainContext> {
   constructor() {
     super();
     const svg = document.getElementById("carrom") as unknown as SVGSVGElement;
@@ -43,6 +44,6 @@ export class Main extends Middleware<MainContext> {
   }
 
   handleActivate = () => {
-    this.context.ready.value = true;
+    this.context.hud.ready.value = true;
   };
 }
